@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 const { dbConnect } = require("@/lib/dbConnect");
 
 export const GET = async (req, { params }) => {
@@ -13,10 +15,17 @@ export const PATCH = async (req, { params }) => {
   const { id } = await params;
   const data = await req.json();
   const collection = await dbConnect();
-  const filter = { id: Number(id) };
-  const options = { upsert: true };
+  const filter = { _id: new ObjectId(id) };
   const updatedDoc = {
-    $set: { data },
+    $set: data,
   };
+  const result = await collection.updateOne(filter, updatedDoc);
+  return Response.json(result);
+};
+
+export const DELETE = async (req, { params }) => {
+  const { id } = await params;
+  const collection = await dbConnect();
+  const result = await collection.deleteOne({ id: new ObjectId(id) });
   return Response.json(result);
 };
