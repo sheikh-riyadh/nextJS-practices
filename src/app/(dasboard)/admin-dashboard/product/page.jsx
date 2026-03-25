@@ -1,9 +1,7 @@
-const Product = async () => {
-  const res = await fetch(`http://localhost:3000/api/items`, {
-    cache: "force-cache",
-  });
-  const products = await res.json();
+import { getProducts } from "@/app/actions/products/getProducts";
 
+const Product = async () => {
+  const products = await getProducts();
   return (
     <div className="grid grid-cols-5 gap-5 my-10 over">
       {products?.map((product) => (
