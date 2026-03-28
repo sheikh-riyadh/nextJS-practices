@@ -7,3 +7,5 @@ export const getProducts = async () => {
   const products = await collection.find({}).toArray();
   return products;
 };
+
+

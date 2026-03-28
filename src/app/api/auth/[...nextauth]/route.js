@@ -1,3 +1,4 @@
+import { dbConnect } from "@/lib/dbConnect";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -7,17 +8,13 @@ export const authOptions = {
       name: "Credentials",
 
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "jsmith" },
+        email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const user = {
-          id: 1,
-          name: "Alif",
-          email: "example@gmail.com",
-        };
-
-        if (user) {
+        const collection = await dbConnect("user");
+        const user = await collection.findOne({ email: credentials.email });
+        if (user && user.password === credentials.password) {
           return user;
         }
         return null;
@@ -27,15 +24,16 @@ export const authOptions = {
   callbacks: {
     async session({ session, token, user }) {
       if (token) {
-        session.user.username = token.username;
-        session.user.role = token.role;
+        session.user.name = token?.name;
+        session.user.role = token?.role;
       }
+
       return session;
     },
     async jwt({ token, user, account, profile, isNewUser }) {
-      if (token) {
-        token.username = user.username;
-        token.role = user.role;
+      if (user) {
+        token.name = user?.name;
+        token.role = user?.role;
       }
       return token;
     },

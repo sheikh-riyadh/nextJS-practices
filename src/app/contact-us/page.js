@@ -1,11 +1,12 @@
-import React from 'react';
+import ContactForm from "@/components/pages/contact/form";
+import React from "react";
 
 const ContactUs = () => {
-    return (
-        <div>
-            <p>This is Contact us page</p>
-        </div>
-    );
+  return (
+    <div>
+      <ContactForm />
+    </div>
+  );
 };
 
 export default ContactUs;
