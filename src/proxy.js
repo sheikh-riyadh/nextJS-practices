@@ -1,14 +1,16 @@
-import { NextResponse } from 'next/server'
+import { getToken } from "next-auth/jwt";
+import { NextResponse } from "next/server";
 
- 
-// This function can be marked `async` if using `await` inside
-export function proxy(request) {
-  return NextResponse.redirect(new URL('/', request.url))
-}
- 
-// Alternatively, you can use a default export:
-// export default function proxy(request: NextRequest) { ... }
- 
+export const proxy = async (req) => {
+  const token = await getToken({ req });
+  if (!token) {
+    const callBackUrl = encodeURIComponent(req.nextUrl.pathname);
+    return NextResponse.redirect(
+      new URL(`/api/auth/signin?callbackUrl=${callBackUrl}`, req.url),
+    );
+  }
+};
+
 export const config = {
-  matcher: ['/about/:path*', '/admin-dashboard/order'],
-}
+  matcher: ["/about/:path*", "/admin-dashboard/order"],
+};

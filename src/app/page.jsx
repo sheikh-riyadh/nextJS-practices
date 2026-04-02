@@ -1,7 +1,8 @@
 import LoginButton from "@/components/common/loginButton";
+import LogoutButton from "@/components/common/logoutButton";
+import { authOptions } from "@/lib/authOptions";
 import { getServerSession } from "next-auth";
 import Image from "next/image";
-import { authOptions } from "./api/auth/[...nextauth]/route";
 
 export const Home = async () => {
   const session = await getServerSession(authOptions);
@@ -38,7 +39,7 @@ export const Home = async () => {
             center.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
+        <div className="flex flex-col items-center gap-4 text-base font-medium sm:flex-row">
           <a
             className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc]"
             href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
@@ -62,7 +63,7 @@ export const Home = async () => {
           >
             Documentation
           </a>
-          <LoginButton />
+          {!session?.user ? <LoginButton /> : <LogoutButton />}
         </div>
         {JSON.stringify(session)}
       </main>
